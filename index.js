@@ -1,12 +1,12 @@
-// server.js
+import express, { Router } from "express";
+import axios from "axios";
+import serverless from "serverless-http";
 
-import express from 'express';
-import axios from 'axios';
+const api = express();
+const router = Router();
 
-const app = express();
-
-// Route to proxy MP3 files
-app.get('/proxy', async (req, res) => {
+// Proxy route to fetch MP3 files
+router.get("/proxy", async (req, res) => {
     const { url } = req.query; // Get the URL parameter from the query string
 
     if (!url) {
@@ -30,14 +30,9 @@ app.get('/proxy', async (req, res) => {
     }
 });
 
-// Sample route to respond with a greeting
-app.get('/scd', (req, res) => {
-    const name = req.query.name || 'Guest'; // Get name from query, default to 'Guest'
-    res.send(`Hello ${name}!`); // Respond with greeting
-});
+// Sample greeting route
+router.get("/hello", (req, res) => res.send("Hello World!"));
 
-// Start the server
-const port = parseInt(process.env.PORT) || 3000;
-app.listen(port, () => {
-    console.log(`Listening on port ${port}`);
-});
+api.use("/api/", router);
+
+export const handler = serverless(api);
